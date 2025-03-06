@@ -1,9 +1,15 @@
+const { getDevice } = require("../controllers/devicesController");
+const Technician = require("../models/technician");
+
 const technicians = [];
+let id = 0;
 
 const addTechnician = (technician) => {
-    technicians.push(technician);
-    console.log('Technician added:', technician.id);
-    return technician;
+    const newTechnician = new Technician(id, technician.name, technician.devices);
+    id+=1;
+    technicians.push(newTechnician);
+    console.log('Technician added:', newTechnician.id);
+    return newTechnician;
 }
 
 const getTechnicians = () => {
@@ -25,11 +31,12 @@ const getTechnician = (id) => {
 }
 
 const callTechnician = (deviceId) => {
+    console.log('Calling technician...');
     const techId = Math.floor(Math.random() * technicians.length);
     const technician = getTechnician(techId);
     if (technician) {
-        technician.devices.push(deviceId);
-        deviceService.addTechnician(deviceId, technician.id);
+        const device = getDevice(deviceId);
+        technician.devices.push(device);
         console.log('Technician called:', technician.id, '\nDevice:', deviceId);
         return technician;
     }
@@ -41,5 +48,5 @@ module.exports = {
     addTechnician,
     getTechnician,
     getTechnicians,
-    callTechnician
+    callTechnician,
 };

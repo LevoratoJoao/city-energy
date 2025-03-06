@@ -1,9 +1,15 @@
+const Device = require('../models/device');
+const technicianService = require('./technicianService');
+
 const devices = [];
+let id = 0;
 
 const addDevice = (device) => {
-    devices.push(device);
-    console.log('Device added:', device.id);
-    return device;
+    const newDevice = new Device(device.type, id, device.name, device.description, device.status, device.energy);
+    id+=1;
+    devices.push(newDevice);
+    console.log('Device added:', newDevice);
+    return newDevice;
 }
 
 const getDevices = () => {
@@ -17,7 +23,7 @@ const getDevice = (id) => {
         }
     });
     if (device) {
-        console.log('Device found:', device.id);
+        console.log('Device found:', device);
         return device;
     }
     console.log('Device not found:', id);
@@ -28,27 +34,29 @@ const updateDevice = (id, status) => {
     const device = getDevice(id);
     if (device) {
         device.status = status;
-        console.log('Device updated:', device.id);
+        console.log('Device updated:', device);
+        if (device.status === 'Off') {
+            const technician = technicianService.callTechnician(id);
+            device.technician.push(technician);
+        }
         return device;
     }
     return null;
 }
 
-const addTechnician = (deviceId, techId) => {
-    const device = getDevice(deviceId);
-    if (device) {
-        device.technician.push(techId);
-        console.log('Technician added:', techId, '\nDevice:', deviceId);
-        return device;
-    }
-    return null;
-}
-
+// const addTechnician = (deviceId, techId) => {
+//     const device = getDevice(deviceId);
+//     if (device) {
+//         console.log('Technician added:', techId, '\nDevice:', deviceId);
+//         return device;
+//     }
+//     return null;
+// }
 
 module.exports = {
     addDevice,
     getDevice,
     getDevices,
     updateDevice,
-    addTechnician
+    // addTechnician
 };

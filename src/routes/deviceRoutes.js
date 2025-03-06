@@ -1,10 +1,10 @@
 const express = require('express');
-const devicesConstroller = require('../controllers/devicesController');
+const devicesController = require('../controllers/devicesController');
 const router = express.Router();
 
-router.post('/', devicesConstroller.addDevice);
-router.get('/:id', devicesConstroller.getDevice);
-router.get('/', devicesConstroller.getDevices);
-router.put('/:id/status', devicesConstroller.updateDevice);
+router.post('/', devicesController.addDevice);
+router.get('/:id', devicesController.getDevice);
+router.get('/', devicesController.getDevices);
+router.put('/:id/status', devicesController.updateDevice);
 
 module.exports = router;

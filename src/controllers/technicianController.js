@@ -1,10 +1,8 @@
-const Technician = require('../models/technician');
+const Technician = require('../models/technician').default;
 const technicianService = require('../services/technicianService');
 
 exports.addTechnician = (req, res) => {
-    const technician = new Technician(req.body.id, req.body.name, req.body.devices);
-    technicianService.addTechnician(technician);
-    console.log('Technician added:', technician.id);
+    const technician = technicianService.addTechnician(req.body);
     res.status(201).json({ message: 'Technician added', technician: technician });
 };
 

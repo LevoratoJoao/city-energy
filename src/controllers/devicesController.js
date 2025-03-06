@@ -1,9 +1,8 @@
-const Device = require('../models/device');
+const Device = require('../models/device').default;
 const devicesService = require('../services/devicesService');
 
 exports.addDevice = (req, res) => {
-    const device = new Device(req.body.type, req.body.id, req.body.name, req.body.description, req.body.status, req.body.energy);
-    devicesService.addDevice(device);
+    const device = devicesService.addDevice(req.body);
     res.status(201).json({ message: 'Device added', device: device });
 };
 

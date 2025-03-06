@@ -5,7 +5,7 @@ const [id] = process.argv.slice(2);
 const ws = new WebSocket('ws://localhost:3000');
 
 ws.on('open', () => {
-    console.log('Starting device:', id);
+    console.log('Starting device...', id);
     const data = { data: {
         type: 'device',
         id,
@@ -25,11 +25,22 @@ ws.on('error', (error) => {
 });
 
 ws.on('close', () => {
-    console.log('Device closed');
+    console.log('Shutting down device...', id);
     const data = { data: {
         type: 'device',
         id,
         status: 'Off'
     }};
     ws.send(JSON.stringify(data));
+});
+
+process.on('SIGINT', () => {
+    console.log('Shutting down device...', id);
+    const data = { data: {
+        type: 'device',
+        id,
+        status: 'Off'
+    }};
+    ws.send(JSON.stringify(data));
+    process.exit();
 });

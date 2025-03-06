@@ -4,6 +4,7 @@ const path = require('path');
 
 const bodyParser = require('body-parser');
 const deviceRoutes = require('./routes/deviceRoutes');
+const technicianRoutes = require('./routes/technicianRoutes');
 const devicesService = require('./services/devicesService');
 
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(bodyParser.json());
 app.use('/api/devices', deviceRoutes);
+app.use('/api/technician', technicianRoutes);
 
 const server = app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
