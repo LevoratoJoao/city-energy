@@ -28,7 +28,6 @@ app.get('/client', (req, res) => {
     res.sendFile(join(__dirname, '../public/client.html'));
 });
 
-// WebSocket Server
 const wss = new WebSocketServer({ noServer: true });
 
 wss.on('connection', (ws) => {

@@ -5,7 +5,6 @@ class Device {
         this.name = name;
         this.description = description
         this.status = status;
-        this.energy = energy;
         this.technician = [];
     }
 }

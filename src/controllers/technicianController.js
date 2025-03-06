@@ -19,3 +19,15 @@ export const getTechnician = (req, res) => {
         res.status(404).json({ message: 'Technician not found' });
     }
 };
+
+export const markCallComplete = (req, res) => {
+    const techId = req.params;
+    const deviceId = req.body;
+
+    const message = technicianService.markCallComplete(techId.id, deviceId.id);
+    if (message) {
+        res.status(200).json(message);
+    } else {
+        res.status(404).json({ message: 'Something went wrong' });
+    }
+}

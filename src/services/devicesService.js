@@ -1,15 +1,19 @@
 import Device from '../models/device.js';
 import technicianService from './technicianService.js';
+import client from '../config/db.js';
 
 const devices = [];
 let id = 0;
 
-const addDevice = (device) => {
-    const newDevice = new Device(device.type, id, device.name, device.description, device.status, device.energy);
-    id+=1;
-    devices.push(newDevice);
-    console.log('Device added:', newDevice);
-    return newDevice;
+const addDevice = async (device) => {
+    const query = 'INSERT INTO devices (type, name, description, status, energy) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    const values = [device.type, device.name, device.description, device.status, device.energy];
+    const result = await client.query(query, values);
+    // const newDevice = new Device(device.type, id, device.name, device.description, device.status, device.energy);
+    // id+=1;
+    // devices.push(newDevice);
+    console.log('Device added:', result.rows[0]);
+    return result.rows[0];
 }
 
 const getDevices = () => {

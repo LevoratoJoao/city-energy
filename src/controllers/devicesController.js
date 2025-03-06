@@ -1,8 +1,12 @@
 import devicesService from '../services/devicesService.js';
 
-export const addDevice = (req, res) => {
-    const device = devicesService.addDevice(req.body);
-    res.status(201).json({ message: 'Device added', device: device });
+export const addDevice = async (req, res) => {
+    try {
+        const device = await devicesService.addDevice(req.body);
+        res.status(201).json({ message: 'Device added', device: device });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding device', error: error.message });
+    }
 };
 
 export const getDevices = (req, res) => {

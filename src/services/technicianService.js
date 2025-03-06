@@ -33,15 +33,26 @@ const getTechnician = (id) => {
 const callTechnician = (deviceId) => {
     console.log('Calling technician...');
     const techId = Math.floor(Math.random() * technicians.length);
+
     const technician = getTechnician(techId);
-    if (technician) {
-        const device = deviceService.getDevice(deviceId);
-        technician.devices.push({ id: device.id, name: device.name, status: device.status });
-        console.log('Technician called:', technician.id, '\nDevice:', deviceId);
-        return technician;
+    const device = deviceService.getDevice(deviceId);
+
+    technician.devices.set(device.id, { name: device.name, description: device.description, status: device.status });
+    console.log('Technician called:', technician, '\nDevice:', deviceId);
+    return technician;
+}
+
+const markCallComplete = (techId, deviceId) => {
+    const technician = getTechnician(techId);
+    if (technician === null) {
+        return null;
     }
-    console.log('Technician not available');
-    return null;
+    const device = deviceService.updateDevice(deviceId, "On");
+    if (device === null) {
+        return null;
+    }
+    technician.devices.delete(deviceId);
+    return "Device repaired";
 }
 
 export default {
@@ -49,4 +60,5 @@ export default {
     getTechnician,
     getTechnicians,
     callTechnician,
+    markCallComplete
 };
