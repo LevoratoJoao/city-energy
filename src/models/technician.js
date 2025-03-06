@@ -6,4 +6,4 @@ class Technician {
     }
 }
 
-module.exports = Technician;
+export default Technician;

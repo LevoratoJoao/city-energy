@@ -1,18 +1,18 @@
-const Device = require('../models/device').default;
-const devicesService = require('../services/devicesService');
+import devicesService from '../services/devicesService.js';
 
-exports.addDevice = (req, res) => {
+export const addDevice = (req, res) => {
     const device = devicesService.addDevice(req.body);
     res.status(201).json({ message: 'Device added', device: device });
 };
 
-exports.getDevices = (req, res) => {
+export const getDevices = (req, res) => {
     const devices = devicesService.getDevices();
     res.status(200).json(devices);
 };
 
-exports.getDevice = (req, res) => {
+export const getDevice = (req, res) => {
     const id = req.params;
+    console.log('In getDevice', id);
     const device = devicesService.getDevice(id.id);
     if (device) {
         res.status(200).json(device);
@@ -21,7 +21,7 @@ exports.getDevice = (req, res) => {
     }
 };
 
-exports.updateDevice = (req, res) => {
+export const updateDevice = (req, res) => {
     const id = req.params;
     const status = req.body.status;
     const device = devicesService.updateDevice(id, status);

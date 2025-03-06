@@ -1,5 +1,5 @@
-const { getDevice } = require("../controllers/devicesController");
-const Technician = require("../models/technician");
+import deviceService from "../services/devicesService.js";
+import Technician from "../models/technician.js";
 
 const technicians = [];
 let id = 0;
@@ -8,7 +8,7 @@ const addTechnician = (technician) => {
     const newTechnician = new Technician(id, technician.name, technician.devices);
     id+=1;
     technicians.push(newTechnician);
-    console.log('Technician added:', newTechnician.id);
+    console.log('Technician added:', newTechnician);
     return newTechnician;
 }
 
@@ -35,8 +35,8 @@ const callTechnician = (deviceId) => {
     const techId = Math.floor(Math.random() * technicians.length);
     const technician = getTechnician(techId);
     if (technician) {
-        const device = getDevice(deviceId);
-        technician.devices.push(device);
+        const device = deviceService.getDevice(deviceId);
+        technician.devices.push({ id: device.id, name: device.name, status: device.status });
         console.log('Technician called:', technician.id, '\nDevice:', deviceId);
         return technician;
     }
@@ -44,7 +44,7 @@ const callTechnician = (deviceId) => {
     return null;
 }
 
-module.exports = {
+export default {
     addTechnician,
     getTechnician,
     getTechnicians,

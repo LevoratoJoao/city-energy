@@ -1,17 +1,16 @@
-const Technician = require('../models/technician').default;
-const technicianService = require('../services/technicianService');
+import technicianService from '../services/technicianService.js';
 
-exports.addTechnician = (req, res) => {
+export const addTechnician = (req, res) => {
     const technician = technicianService.addTechnician(req.body);
     res.status(201).json({ message: 'Technician added', technician: technician });
 };
 
-exports.getTechnicians = (req, res) => {
+export const getTechnicians = (req, res) => {
     const technicians = technicianService.getTechnicians();
     return res.status(200).json(technicians);
 };
 
-exports.getTechnician = (req, res) => {
+export const getTechnician = (req, res) => {
     const id = req.params;
     const technician = technicianService.getTechnician(id.id);
     if (technician) {

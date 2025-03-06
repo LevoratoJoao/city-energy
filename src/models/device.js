@@ -9,4 +9,4 @@ class Device {
         this.technician = [];
     }
 }
-module.exports = Device;
+export default Device;

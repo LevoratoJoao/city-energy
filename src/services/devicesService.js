@@ -1,5 +1,5 @@
-const Device = require('../models/device');
-const technicianService = require('./technicianService');
+import Device from '../models/device.js';
+import technicianService from './technicianService.js';
 
 const devices = [];
 let id = 0;
@@ -34,10 +34,11 @@ const updateDevice = (id, status) => {
     const device = getDevice(id);
     if (device) {
         device.status = status;
-        console.log('Device updated:', device);
         if (device.status === 'Off') {
+            console.log('In updateDevice: ', id);
             const technician = technicianService.callTechnician(id);
-            device.technician.push(technician);
+
+            device.technician.push({ id: technician.id, name: technician.name });
         }
         return device;
     }
@@ -53,7 +54,7 @@ const updateDevice = (id, status) => {
 //     return null;
 // }
 
-module.exports = {
+export default {
     addDevice,
     getDevice,
     getDevices,

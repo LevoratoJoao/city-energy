@@ -1,9 +1,9 @@
-const express = require('express');
-const technicianController = require('../controllers/technicianController');
-const router = express.Router();
+import { Router } from 'express';
+import { addTechnician, getTechnicians, getTechnician } from '../controllers/technicianController.js';
+const router = Router();
 
-router.post('/', technicianController.addTechnician);
-router.get('/', technicianController.getTechnicians);
-router.get('/:id', technicianController.getTechnician);
+router.post('/', addTechnician);
+router.get('/', getTechnicians);
+router.get('/:id', getTechnician);
 
-module.exports = router;
+export default router;
