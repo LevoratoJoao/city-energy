@@ -1,52 +1,81 @@
-import Device from '../models/device.js';
 import technicianService from './technicianService.js';
-import client from '../config/db.js';
+import { PrismaClient, Prisma } from '@prisma/client'
 
-const devices = [];
-let id = 0;
+const prisma = new PrismaClient();
 
 const addDevice = async (device) => {
-    const query = 'INSERT INTO devices (type, name, description, status, energy) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-    const values = [device.type, device.name, device.description, device.status, device.energy];
-    const result = await client.query(query, values);
-    // const newDevice = new Device(device.type, id, device.name, device.description, device.status, device.energy);
-    // id+=1;
-    // devices.push(newDevice);
-    console.log('Device added:', result.rows[0]);
-    return result.rows[0];
+    const newDevice = await prisma.device.create({
+        data: {
+            type: device.type,
+            name: device.name,
+            description: device.description,
+            status: device.status,
+        },
+        include: {
+            assignments: {
+                include: {
+                    technician: true
+                }
+            }
+        }
+    })
+    console.log('Device added:', newDevice);
+    return newDevice;
 }
 
-const getDevices = () => {
+const getDevices = async () => {
+    const devices = await prisma.device.findMany({
+        include: {
+            assignments: {
+                include: {
+                    technician: true
+                }
+            }
+        }
+    });
     return devices;
 }
 
-const getDevice = (id) => {
-    const device = devices.find((device) => {
-        if (device.id === Number(id)) {
-            return device;
+const getDevice = async (id) => {
+    const device = await prisma.device.findFirst({
+        where: {
+            id: Number(id)
         }
     });
-    if (device) {
-        console.log('Device found:', device);
-        return device;
-    }
-    console.log('Device not found:', id);
-    return null;
+    return device;
 }
 
-const updateDevice = (id, status) => {
-    const device = getDevice(id);
-    if (device) {
-        device.status = status;
-        if (device.status === 'Off') {
-            console.log('In updateDevice: ', id);
-            const technician = technicianService.callTechnician(id);
-
-            device.technician.push({ id: technician.id, name: technician.name });
-        }
-        return device;
+const updateDevice = async (id, status) => {
+    const device = await getDevice(id);
+    device.status = status;
+    if (device.status === 'Off') {
+        technicianService.callTechnician(id);
+        const updatedDevice = await prisma.device.update({
+            where: {
+                id: Number(id)
+            },
+            data: {
+                status: status
+            },
+            include: {
+                assignments: {
+                    include: {
+                        technician: true
+                    }
+                }
+            }
+        });
+        return updatedDevice;
     }
-    return null;
+    const updatedDevice = await prisma.device.update({
+        where: {
+            id: device.id
+        },
+        data: {
+            status: device.status
+        }
+    });
+    return updatedDevice;
 }
 
 // const addTechnician = (deviceId, techId) => {

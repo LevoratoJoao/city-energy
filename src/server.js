@@ -33,7 +33,7 @@ const wss = new WebSocketServer({ noServer: true });
 wss.on('connection', (ws) => {
     ws.on('error', console.error);
 
-    ws.on('message', (message) => {
+    ws.on('message', async (message) => {
         const json = JSON.parse(message);
         console.log('Received message:', json.data);
         if (json !== null && json.data.type === 'device') {

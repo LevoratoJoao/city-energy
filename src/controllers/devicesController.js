@@ -9,15 +9,14 @@ export const addDevice = async (req, res) => {
     }
 };
 
-export const getDevices = (req, res) => {
-    const devices = devicesService.getDevices();
+export const getDevices = async (req, res) => {
+    const devices = await devicesService.getDevices();
     res.status(200).json(devices);
 };
 
-export const getDevice = (req, res) => {
+export const getDevice = async (req, res) => {
     const id = req.params;
-    console.log('In getDevice', id);
-    const device = devicesService.getDevice(id.id);
+    const device = await devicesService.getDevice(id.id);
     if (device) {
         res.status(200).json(device);
     } else {

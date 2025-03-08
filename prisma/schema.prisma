@@ -13,24 +13,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Device {
-  id Int @id @default(autoincrement())
-  name String
-  description String
-  status String @default("Off")
-  technicians TechnicianDevice[]
+model device {
+  id          Int      @id @default(autoincrement())
+  type        String
+  name        String
+  description String?
+  status      String @default("Off")
+  assignments assignment[]
+  // createdAt   DateTime @default(now())
+  // updatedAt   DateTime @updatedAt
 }
 
-model Technician {
-  id Int @id @default(autoincrement())
-  name String
-  devices TechnicianDevice[]
+model technician {
+  id        Int      @id @default(autoincrement())
+  name      String
+  assignments assignment[]
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
 }
 
-model TechnicianDevice {
-  id Int @id @default(autoincrement())
+model assignment {
+  id           Int        @id @default(autoincrement())
+  technician   technician @relation(fields: [technicianId], references: [id])
   technicianId Int
-  technician Technician @relation(fields: [technicianId], references: [id])
-  deviceId Int
-  device Device @relation(fields: [deviceId], references: [id])
+  device       device     @relation(fields: [deviceId], references: [id])
+  deviceId     Int
+  status       String     @default("ACTIVE") // ACTIVE or COMPLETED
+  // createdAt    DateTime   @default(now())
+  // updatedAt    DateTime   @updatedAt
+
+  @@unique([technicianId, deviceId, status])
 }
