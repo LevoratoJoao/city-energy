@@ -7,6 +7,7 @@ const { json } = bodyParser;
 
 import deviceRoutes from './routes/deviceRoutes.js';
 import technicianRoutes from './routes/technicianRoutes.js';
+import assignmentRoutes from './routes/assignmentsRoutes.js';
 import deviceService from './services/devicesService.js';
 
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ const app = express();
 app.use(json());
 app.use('/api/devices', deviceRoutes);
 app.use('/api/technician', technicianRoutes);
+app.use('/api/assignments', assignmentRoutes);
 
 const server = app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);

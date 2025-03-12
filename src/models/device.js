@@ -4,7 +4,6 @@ class Device {
         this.id = id;
         this.name = name;
         this.description = description
-        this.technician = [];
     }
 }
 export default Device;

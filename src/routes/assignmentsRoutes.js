@@ -6,6 +6,6 @@ const router = Router();
 router.post('/', addAssignment);
 router.get('/:id', getAssignment);
 router.get('/', getAssignments);
-router.put('/:id/status', updateAssignment);
+router.put('/:id', updateAssignment);
 
 export default router;

@@ -24,15 +24,7 @@ const addDevice = async (device) => {
 }
 
 const getDevices = async () => {
-    const devices = await prisma.device.findMany({
-        include: {
-            assignments: {
-                include: {
-                    technician: true
-                }
-            }
-        }
-    });
+    const devices = await prisma.device.findMany();
     return devices;
 }
 
@@ -56,13 +48,6 @@ const updateDevice = async (id, status) => {
             },
             data: {
                 status: status
-            },
-            include: {
-                assignments: {
-                    include: {
-                        technician: true
-                    }
-                }
             }
         });
         return updatedDevice;
@@ -78,19 +63,9 @@ const updateDevice = async (id, status) => {
     return updatedDevice;
 }
 
-// const addTechnician = (deviceId, techId) => {
-//     const device = getDevice(deviceId);
-//     if (device) {
-//         console.log('Technician added:', techId, '\nDevice:', deviceId);
-//         return device;
-//     }
-//     return null;
-// }
-
 export default {
     addDevice,
     getDevice,
     getDevices,
     updateDevice,
-    // addTechnician
 };
