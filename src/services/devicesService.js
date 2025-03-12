@@ -1,6 +1,5 @@
 import technicianService from './technicianService.js';
 import { PrismaClient, Prisma } from '@prisma/client'
-
 const prisma = new PrismaClient();
 
 const addDevice = async (device) => {
@@ -38,10 +37,8 @@ const getDevice = async (id) => {
 }
 
 const updateDevice = async (id, status) => {
-    const device = await getDevice(id);
-    device.status = status;
-    if (device.status === 'Off') {
-        technicianService.callTechnician(id);
+    if (status === 'Off') {
+        //technicianService.callTechnician(id);
         const updatedDevice = await prisma.device.update({
             where: {
                 id: Number(id)
@@ -52,15 +49,6 @@ const updateDevice = async (id, status) => {
         });
         return updatedDevice;
     }
-    const updatedDevice = await prisma.device.update({
-        where: {
-            id: device.id
-        },
-        data: {
-            status: device.status
-        }
-    });
-    return updatedDevice;
 }
 
 export default {

@@ -20,14 +20,8 @@ export const getTechnician = async (req, res) => {
     }
 };
 
-export const markCallComplete = async (req, res) => {
-    const techId = req.params;
-    const deviceId = req.body;
-
-    const message = await technicianService.markCallComplete(techId.id, deviceId.id);
-    if (message) {
-        res.status(200).json(message);
-    } else {
-        res.status(404).json({ message: 'Something went wrong' });
-    }
-}
+export const callTechnician = async (req, res) => {
+    const deviceId = req.params;
+    const technician = await technicianService.callTechnician(deviceId.deviceId);
+    res.status(200).json({ message: 'Technician called', technician: technician });
+};

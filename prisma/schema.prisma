@@ -41,6 +41,4 @@ model assignment {
   status       String     @default("ACTIVE") // ACTIVE or COMPLETED
   // createdAt    DateTime   @default(now())
   // updatedAt    DateTime   @updatedAt
-
-  @@unique([technicianId, deviceId, status])
 }

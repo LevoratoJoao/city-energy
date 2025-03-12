@@ -1,8 +1,4 @@
-import deviceService from "../services/devicesService.js";
-import Technician from "../models/technician.js";
-
 import { PrismaClient, Prisma } from '@prisma/client'
-import { PrismaClientRustPanicError } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
@@ -58,23 +54,9 @@ const callTechnician = async (deviceId) => {
     return updatedTechnician;
 }
 
-const markCallComplete = async (assignmentId) => {
-    const assignment = await prisma.assignment.update({
-        where: {
-            id: Number(assignmentId)
-        },
-        data: {
-            status: "COMPLETED"
-        }
-    });
-    await deviceService.updateDevice(assignment.deviceId, "On");
-    return "Device repaired";
-}
-
 export default {
     addTechnician,
     getTechnician,
     getTechnicians,
     callTechnician,
-    markCallComplete
 };

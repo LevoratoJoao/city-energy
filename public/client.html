@@ -11,26 +11,31 @@
     <input type="text" id="device_id" placeholder="Device ID">
     <button onclick="checkDeviceState()">Check</button>
     <p id="device_state"></p>
-    <div id="call_support">
+    <div id="last_assignment">
 
     </div>
     <script>
-        async function callSupport() {
+        async function checkLastAssignment() {
             const device_id = document.getElementById('device_id').value;
-            const response = await fetch(`/api/devices/${device_id}/call_support`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({device_id})
-            });
+            const response = await fetch(`/api/assignments/device/${device_id}/last`);
             const data = await response.json();
             console.log(data);
-            if (data.status === 'success') {
-                document.getElementById('call_support').innerHTML = `
-                    <p>Support has been called</p>
+
+            document.getElementById('last_assignment').innerHTML = `
+                <p>Last assignment: Technician Name: ${data.technician.name}, Status: ${data.assignment.status}</p>
+            `;
+            if (data.assignment.status === 'COMPLETED') {
+                document.getElementById('last_assignment').innerHTML = `
+                    <p>Last assignment: Technician Name: ${data.technician.name}, Status: ${data.assignment.status}</p>
+                    <button onclick="callTechnician(${device_id})">Call Technician</button>
                 `;
             }
+        }
+
+        async function callTechnician(device_id) {
+            const response = await fetch(`/api/technician/call/${device_id}`);
+            const data = await response.json();
+            console.log(data);
         }
 
         async function fetchDeviceState(device_id) {
@@ -38,11 +43,15 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    document.getElementById('device_state').innerText = `Device ID: ${data.id}, Device name: ${data.name}, status: ${data.status}, `;
+                    document.getElementById('device_state').innerText = `Device ID: ${data.id}, Device name: ${data.name}, status: ${data.status}`;
                     if (data.status === 'Off') {
-                        document.getElementById('call_support').innerHTML = `
-                            <p>Device is offline, please call support</p>
-                            <button onclick="callSupport()">Call support</button>
+                        document.getElementById('last_assignment').innerHTML = `
+                            <p>Device is offline</p>
+                            <button onclick="checkLastAssignment()">Check last assignment</button>
+                        `;
+                    } else {
+                        document.getElementById('last_assignment').innerHTML = `
+                            <p>Device is online</p>
                         `;
                     }
                 });
